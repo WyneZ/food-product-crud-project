@@ -1,0 +1,64 @@
+<div class="container">
+  <h2>Food Products</h2>
+
+  <div class="actions">
+    <button mat-raised-button color="primary" (click)="openForm()">
+      <mat-icon>add</mat-icon> New
+    </button>
+    <span class="total">Total: {{ dataSource.data.length }}</span>
+  </div>
+
+  <mat-progress-spinner *ngIf="loading" mode="indeterminate"></mat-progress-spinner>
+
+  <!-- Product List with @for -->
+  <div class="product-table mat-elevation-z8" *ngIf="!loading">
+    <!-- Table Header -->
+    <div class="table-header">
+      <div class="header-cell">Product ID</div>
+      <div class="header-cell">Type</div>
+      <div class="header-cell">Mfd Date</div>
+      <div class="header-cell">Exp Date</div>
+      <div class="header-cell">Net Weight (g)</div>
+      <div class="header-cell">Actions</div>
+    </div>
+
+    <!-- Table Body with @for - Use paginatedData instead of dataSource.data -->
+    @for (product of paginatedData; track product.id) {
+      <div class="table-row">
+        <div class="data-cell">{{ product.product_id }}</div>
+        <div class="data-cell">{{ product.product_type }}</div>
+        <div class="data-cell">{{ product.manufactured_date | date:'shortDate' }}</div>
+        <div class="data-cell">{{ product.expired_date | date:'shortDate' }}</div>
+        <div class="data-cell">{{ product.net_weight }}</div>
+        <div class="data-cell actions-cell">
+          <button mat-icon-button (click)="openForm(product)" title="Edit">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteProduct(product)" title="Delete">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    }
+
+    <!-- Empty State -->
+    @if (dataSource.data.length === 0 && !loading) {
+      <div class="empty-state">
+        <p>No products found. Click "New" to add a product.</p>
+      </div>
+    }
+  </div>
+
+  <!-- Paginator - Show only if there are products -->
+  @if (dataSource.data.length > 0 && !loading) {
+    <mat-paginator 
+      [length]="dataSource.data.length"
+      [pageSize]="pageSize"
+      [pageIndex]="currentPage"
+      [pageSizeOptions]="pageSizeOptions"
+      (page)="onPageChange($event)"
+      showFirstLastButtons
+      aria-label="Select page of products">
+    </mat-paginator>
+  }
+</div>

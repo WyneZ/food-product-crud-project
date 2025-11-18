@@ -1,0 +1,68 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Edit' : 'Add' }} Product</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="productForm" class="product-form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Product ID</mat-label>
+      <input matInput formControlName="product_id" placeholder="Enter product ID">
+      <mat-error *ngIf="productForm.get('product_id')?.hasError('required')">
+        Product ID is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Product Type</mat-label>
+      <mat-select formControlName="product_type">
+        <mat-option value="">Select Type</mat-option>
+        <mat-option *ngFor="let type of productTypes" [value]="type">
+          {{ type }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="productForm.get('product_type')?.hasError('required')">
+        Product type is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Manufactured Date</mat-label>
+      <input matInput [matDatepicker]="mfdPicker" formControlName="manufactured_date">
+      <mat-datepicker-toggle matSuffix [for]="mfdPicker"></mat-datepicker-toggle>
+      <mat-datepicker #mfdPicker></mat-datepicker>
+      <mat-error *ngIf="productForm.get('manufactured_date')?.hasError('required')">
+        Manufactured date is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Expired Date</mat-label>
+      <input matInput [matDatepicker]="expPicker" formControlName="expired_date">
+      <mat-datepicker-toggle matSuffix [for]="expPicker"></mat-datepicker-toggle>
+      <mat-datepicker #expPicker></mat-datepicker>
+      <mat-error *ngIf="productForm.get('expired_date')?.hasError('required')">
+        Expired date is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Net Weight (g)</mat-label>
+      <input matInput type="number" formControlName="net_weight" min="1" placeholder="Enter weight in grams">
+      <mat-error *ngIf="productForm.get('net_weight')?.hasError('required')">
+        Net weight is required
+      </mat-error>
+      <mat-error *ngIf="productForm.get('net_weight')?.hasError('min')">
+        Net weight must be at least 1 gram
+      </mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button 
+    mat-raised-button 
+    color="primary" 
+    (click)="onSubmit()"
+    [disabled]="!productForm.valid">
+    {{ isEdit ? 'Update' : 'Save' }}
+  </button>
+</mat-dialog-actions>
